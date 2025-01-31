@@ -47,7 +47,7 @@ EOF
 ANACONDA_DIR="/opt/anaconda3"
 if [ ! -d "$ANACONDA_DIR" ]; then
     echo "🔹 Downloading & Installing Anaconda..."
-    wget https://repo.anaconda.com/archive/Anaconda3-latest-Linux-x86_64.sh -O /tmp/anaconda.sh
+    wget https://repo.anaconda.com/archive/Anaconda3-2023.09-0-Linux-x86_64.sh -O /tmp/anaconda.sh
     sudo bash /tmp/anaconda.sh -b -p $ANACONDA_DIR
     rm /tmp/anaconda.sh
 fi

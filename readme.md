@@ -7,6 +7,8 @@ git clone https://github.com/KMeanSeo/auto_zsh.git && cd zsh-setup && chmod +x a
 Multi user version
 
 ```
-chmod +x setup_zsh.sh
-sudo ./setup_zsh.sh
+sudo apt install unzip -y
+wget https://github.com/KMeanSeo/auto_zsh/archive/refs/heads/anaconda.zip && unzip anaconda.zip && cd auto_zsh-anaconda
+chmod +x auto_zsh.sh
+sudo ./auto_zsh.sh
 ```
