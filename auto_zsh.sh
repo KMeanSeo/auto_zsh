@@ -1,7 +1,5 @@
 #!/bin/bash
 
-ORIGINAL_DIR=$(pwd)
-
 echo "🔹 Installing zsh and required packages..."
 sudo apt update && sudo apt install -y zsh git wget unzip fonts-powerline
 
@@ -36,36 +34,20 @@ source \$ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 EOF
 
-echo "🔹 Applying settings to existing users..."
-for user in $(ls /home); do
-    if [ ! -d "/home/$user/.oh-my-zsh" ]; then
-        sudo cp -r /etc/skel/.oh-my-zsh "/home/$user/"
-        sudo chown -R $user:$user "/home/$user/.oh-my-zsh"
-    fi
-    sudo cp /etc/skel/.zshrc "/home/$user/.zshrc"
-    sudo cp /etc/skel/.p10k.zsh "/home/$user/.p10k.zsh"
-    sudo chown $user:$user "/home/$user/.zshrc" "/home/$user/.p10k.zsh"
-done
+echo "🔹 Copying existing Powerlevel10k configuration..."
+USER_HOME=$(eval echo ~$(logname))
 
-echo "🔹 Applying Powerlevel10k settings for current user..."
-cp ".p10k.zsh" "$HOME/.p10k.zsh"
-
-echo "🔹 Configuring .zshrc for current user..."
-cat > "$HOME/.zshrc" <<EOF
-export ZSH="\$HOME/.oh-my-zsh"
-ZSH_THEME="powerlevel10k/powerlevel10k"
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
-
-source \$ZSH/oh-my-zsh.sh
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if [ -f "$USER_HOME/.p10k.zsh" ]; then
+    sudo cp "$USER_HOME/.p10k.zsh" /etc/skel/.p10k.zsh
+    sudo chmod 644 /etc/skel/.p10k.zsh
+else
+    echo "⚠️ WARNING: $USER_HOME/.p10k.zsh file not found! Creating a default one."
+    sudo tee /etc/skel/.p10k.zsh >/dev/null <<EOF
+# Powerlevel10k Configuration
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
+POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
 EOF
+fi
 
-echo "🔹 Changing default shell to Zsh..."
-chsh -s "$(which zsh)"
-
-cd "$ORIGINAL_DIR"
-echo "🔹 Cleaning up..."
-rm -rf "$ORIGINAL_DIR/auto_zsh-multiuser"
-
-echo "✅ Zsh setup complete!"
-echo "🚀 Please restart your terminal and make sure to use a Nerd Font!"
+echo "✅ Setup complete! New users will have Zsh + Oh My Zsh + Powerlevel10k automatically applied."
