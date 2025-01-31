@@ -37,9 +37,11 @@ EOF
 echo "🔹 Changing default shell to Zsh..."
 chsh -s "$(which zsh)"
 
-cd "$ORIGINAL_DIR/.." || exit
+cd "$ORIGINAL_DIR"
 echo "🔹 Cleaning up..."
-rm -rf "$ORIGINAL_DIR"
+rm -rf "$ORIGINAL_DIR/auto_zsh"
+
+zsh
 
 echo "✅ Zsh setup complete!"
 echo "🚀 Please restart your terminal and make sure to use a Nerd Font!"
